@@ -1,51 +1,72 @@
 "use strict";
 
-const { mongoose } = require("../config/dbConnection");
+const { mongoose } = require("../configs/dbConnection");
 
-const BlogSchema = new mongoose.Schema(
+const blogSchema = new mongoose.Schema(
   {
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      trim: true,
       required: true,
     },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "categories",
-      trim: true,
-      required: true,
-    },
+
     title: {
       type: String,
       trim: true,
       required: true,
     },
+
     content: {
       type: String,
       trim: true,
       required: true,
     },
+
     image: {
       type: String,
       trim: true,
       required: true,
     },
+
     isPublish: {
       type: Boolean,
-      trim: true,
-      required: true,
+      default: true,
     },
-    likes: {
-      type: String,
-      trim: true,
-    },
+
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+
+    visitors: [],
+
     countOfVisitors: {
       type: Number,
-      trim: true,
+      get: function () {
+        return this.visitors.length;
+      },
     },
   },
-  { collection: "blogs", timesmap: true }
+  {
+    collection: "blogs",
+    timestamps: true,
+    toJSON: { getters: true },
+  }
 );
 
-module.exports = mongoose.model("Blog", BlogSchema);
+module.exports = mongoose.model("Blog", blogSchema);

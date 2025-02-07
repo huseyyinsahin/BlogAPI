@@ -1,8 +1,7 @@
 "use strict";
 
-const { mongoose } = require("../config/dbConnection");
-
-const passwordEncyrpt = require("../helpers/passwordEncrypt");
+const { mongoose } = require("../configs/dbConnection");
+const passwordEncrypt = require("../helpers/passwordEncrypt");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -12,46 +11,68 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    firstname: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    lastname: {
-      type: String,
-      trim: true,
-      required: true,
-    },
+
     email: {
       type: String,
       trim: true,
       required: true,
       unique: true,
       validate: [
-        (email) => email.includes("@") && email.includes("."),
-        "email is not valid",
+        (email) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email),
+        "Email type is not correct.",
       ],
     },
+
+    password: {
+      type: String,
+      trim: true,
+      required: [true, "Password field must be required"],
+      set: (password) => {
+        if (
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/.test(
+            password
+          )
+        ) {
+          return passwordEncrypt(password);
+        } else {
+          throw new Error("Password type is not correct.");
+        }
+      },
+    },
+
+    firstName: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    lastName: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
     image: {
       type: String,
       trim: true,
     },
+
     city: {
       type: String,
       trim: true,
     },
+
     bio: {
       type: String,
       trim: true,
     },
-    password: {
-      type: String,
-      trim: true,
-      required: true,
-      set: (password) => passwordEncyrpt(password),
-    },
   },
-  { collection: "users", timesmap: true }
+  { collection: "users", timestamps: true }
 );
 
 module.exports = mongoose.model("User", UserSchema);
