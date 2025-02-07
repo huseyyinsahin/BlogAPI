@@ -3,6 +3,8 @@
 const Blog = require("../models/blog");
 const requestIp = require("request-ip");
 
+const encrypt = require("../helpers/passwordEncrypt");
+
 module.exports = {
   list: async (req, res) => {
     /*
@@ -79,11 +81,11 @@ module.exports = {
             #swagger.tags = ["Blogs"]
             #swagger.summary = "Get Single Blog"
         */
-    const ip = requestIp.getClientIp(req);
+    const ip = encrypt(requestIp.getClientIp(req));
 
     const data = await Blog.findOneAndUpdate(
       { _id: req.params.id },
-      { $addToSet: { visitors: ip } }, 
+      { $addToSet: { visitors: ip } },
       { new: true }
     )
       .populate({
@@ -95,7 +97,7 @@ module.exports = {
       })
       .populate({
         path: "userId",
-        select: "firstName lastName image",
+        select: "username firstName lastName image",
       });
     res.status(200).send({
       error: false,
@@ -135,7 +137,6 @@ module.exports = {
       data,
     });
   },
-
 
   postLike: async (req, res, next) => {
     /*
