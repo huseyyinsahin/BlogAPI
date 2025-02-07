@@ -67,7 +67,7 @@ module.exports = {
             }
         */
 
-    const data = await User.updateOne(req.user._id, req.body, {
+    const data = await User.updateOne({ _id: req.user._id }, req.body, {
       runValidators: true,
     });
 
