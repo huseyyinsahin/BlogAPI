@@ -9,7 +9,7 @@ module.exports = {
     /*
             #swagger.tags = ["Authentication"]
             #swagger.summary = "Login"
-            #swagger.description = 'Login with E -Post and Password.'
+            #swagger.description = 'Login with username/E-Post and Password.'
             #swagger.parameters["body"] = {
                 in: "body",
                 required: true,
@@ -20,10 +20,10 @@ module.exports = {
             }
         */
 
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    if (email && password) {
-      const user = await User.findOne({ email });
+    if ((username || email) && password) {
+      const user = await User.findOne({ $or: [{ email }, { username }] });
 
       if (user && user.password == passwordEncrypt(password)) {
         if (user.isActive) {
@@ -46,11 +46,11 @@ module.exports = {
         }
       } else {
         res.errorStatusCode = 401;
-        throw new Error("Wrong email or password.");
+        throw new Error("Wrong username/email or password.");
       }
     } else {
       res.errorStatusCode = 401;
-      throw new Error("Please enter email and password.");
+      throw new Error("Please enter username/email and password.");
     }
   },
 
