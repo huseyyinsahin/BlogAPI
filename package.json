@@ -1,23 +1,24 @@
 {
+  "title": "Blog API",
   "name": "blogapi",
   "version": "1.0.0",
+  "description": "blogapi",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "start": "nodemon"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "huseyyinsahin",
+  "license": "ISC Licence",
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
-    "http-status-codes": "^2.3.0",
-    "mongoose": "^8.9.6"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
+    "mongoose": "^7.6.2",
+    "redoc-express": "^2.1.0",
+    "request-ip": "^3.3.0",
+    "swagger-autogen": "^2.23.6",
+    "swagger-ui-express": "^5.0.0"
   }
 }
