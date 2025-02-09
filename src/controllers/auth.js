@@ -23,7 +23,9 @@ module.exports = {
     const { username, email, password } = req.body;
 
     if ((username || email) && password) {
-      const user = await User.findOne({ $or: [{ email }, { username }] });
+      const user = await User.findOne({
+        $or: [{ email }, { username }],
+      }).select({ password: 0 });
 
       if (user && user.password == passwordEncrypt(password)) {
         if (user.isActive) {

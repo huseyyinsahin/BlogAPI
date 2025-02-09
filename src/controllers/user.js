@@ -22,7 +22,7 @@ module.exports = {
             }
         */
 
-    const data = await User.create(req.body);
+    const data = await User.create(req.body).select({ password: 0 });
 
     const tokenData = await Token.create({
       userId: data._id,
@@ -42,7 +42,7 @@ module.exports = {
             #swagger.summary = "Get Single User"
         */
 
-    const data = await User.findOne(req.user._id);
+    const data = await User.findOne(req.user._id).select({ password: 0 });
 
     res.status(200).send({
       error: false,
