@@ -49,4 +49,4 @@ app.use(require("./src/middlewares/errorHandler"));
 
 app.listen(PORT, () => console.log(`${PORT}`));
 
-require("./src/helpers/sync")();
+// require("./src/helpers/sync")();
