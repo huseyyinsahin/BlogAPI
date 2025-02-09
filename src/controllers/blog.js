@@ -90,7 +90,7 @@ module.exports = {
     )
       .populate({
         path: "comments",
-        select: "_id comment blogId",
+        select: "_id comment blogId updatedAt",
         populate: {
           path: "userId",
           select: "username firstName lastName image",
