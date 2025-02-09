@@ -23,19 +23,19 @@ module.exports = {
     const { username, email, password } = req.body;
 
     if ((username || email) && password) {
-      const user = await User.findOne({
-        $or: [{ email }, { username }],
-      }).select({ password: 0 });
+      const data = await User.findOne({ $or: [{ email }, { username }] });
 
-      if (user && user.password == passwordEncrypt(password)) {
-        if (user.isActive) {
-          let tokenData = await Token.findOne({ userId: user._id });
+      if (data && data.password == passwordEncrypt(password)) {
+        if (data.isActive) {
+          let tokenData = await Token.findOne({ userId: data._id });
 
           if (!tokenData)
             tokenData = await Token.create({
-              userId: user._id,
-              token: passwordEncrypt(user._id + Date.now()),
+              userId: data._id,
+              token: passwordEncrypt(data._id + Date.now()),
             });
+
+          const user = await User.findById(data._id).select({ password: 0 });
 
           res.status(200).send({
             error: false,

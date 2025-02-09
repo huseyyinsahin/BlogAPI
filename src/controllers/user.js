@@ -22,7 +22,8 @@ module.exports = {
             }
         */
 
-    const data = await User.create(req.body).select({ password: 0 });
+    const user = await User.create(req.body);
+    const data = await User.findOne(user._id).select({ password: 0 });
 
     const tokenData = await Token.create({
       userId: data._id,
