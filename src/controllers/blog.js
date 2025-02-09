@@ -92,7 +92,7 @@ module.exports = {
         path: "comments",
         populate: {
           path: "userId",
-          select: "firstName lastName image",
+          select: "username firstName lastName image",
         },
       })
       .populate({
