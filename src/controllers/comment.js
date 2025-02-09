@@ -40,13 +40,19 @@ module.exports = {
     req.body.userId = userId;
 
     const comment = await Comment.create(req.body);
+
+    const populatedComment = await Comment.findById(comment._id).populate({
+      path: "userId",
+      select: "username firstName lastName image",
+    });
+
     await Blog.findByIdAndUpdate(req.body.blogId, {
-      $push: { comments: comment._id }
+      $push: { comments: comment._id },
     });
 
     res.status(201).send({
       error: false,
-      data: comment,
+      data: populatedComment,
     });
   },
 
@@ -55,7 +61,9 @@ module.exports = {
             #swagger.tags = ["Comments"]
             #swagger.summary = "Get Single Comment"
         */
-    const comment = await Comment.findOne({ _id: req.params.id }).populate([{ path: "userId", select: "firstName,lastName,image" }]);
+    const comment = await Comment.findOne({ _id: req.params.id }).populate([
+      { path: "userId", select: "firstName,lastName,image" },
+    ]);
 
     if (!comment) {
       return res.status(404).send({
@@ -112,7 +120,7 @@ module.exports = {
     }
 
     await Blog.findByIdAndUpdate(comment.blogId, {
-      $pull: { comments: req.params.id }
+      $pull: { comments: req.params.id },
     });
 
     res.status(204).send({
