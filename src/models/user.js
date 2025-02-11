@@ -10,6 +10,8 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: true,
       unique: true,
+      minlength: 3,
+      maxlength: 16,
     },
 
     email: {
@@ -44,12 +46,16 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
+      minlength: 3,
+      maxlength: 16,
     },
 
     lastName: {
       type: String,
       trim: true,
       required: true,
+      minlength: 3,
+      maxlength: 16,
     },
 
     isActive: {
@@ -65,11 +71,13 @@ const UserSchema = new mongoose.Schema(
     city: {
       type: String,
       trim: true,
+      maxlength: 50,
     },
 
     bio: {
       type: String,
       trim: true,
+      maxlength: 300,
     },
   },
   { collection: "users", timestamps: true }
