@@ -1,6 +1,8 @@
 "use strict";
 
 const User = require("../models/user");
+const Blog = require("../models/blog");
+
 const Token = require("../models/token");
 const passwordEncrypt = require("../helpers/passwordEncrypt");
 
@@ -23,7 +25,7 @@ module.exports = {
         */
 
     const user = await User.create(req.body);
-    const data = await User.findOne(user._id).select({ password: 0 });
+    const data = await User.findOne({ _id: user._id }).select({ password: 0 });
 
     const tokenData = await Token.create({
       userId: data._id,
@@ -43,7 +45,13 @@ module.exports = {
             #swagger.summary = "Get Single User"
         */
 
-    const data = await User.findOne(req.user._id).select({ password: 0 });
+    let data = await User.findOne({ _id: req.user._id }).select({
+      password: 0,
+    });
+    if (!data) {
+      throw new Error("User not found");
+    }
+    data.blog = await Blog.find({ userId: req.user._id }).limit(4);
 
     res.status(200).send({
       error: false,
