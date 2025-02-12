@@ -41,21 +41,23 @@ module.exports = {
 
   read: async (req, res) => {
     /*
-            #swagger.tags = ["Users"]
-            #swagger.summary = "Get Single User"
-        */
+      #swagger.tags = ["Users"]
+      #swagger.summary = "Get Single User"
+    */
 
     let data = await User.findOne({ _id: req.user._id }).select({
       password: 0,
     });
+
     if (!data) {
       throw new Error("User not found");
     }
-    data.blog = await Blog.find({ userId: req.user._id }).limit(4);
+
+    const blogs = await Blog.find({ userId: req.user._id }).limit(4);
 
     res.status(200).send({
       error: false,
-      data,
+      data: { ...data.toObject(), blogs },
     });
   },
 
