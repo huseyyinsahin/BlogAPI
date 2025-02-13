@@ -85,7 +85,7 @@ module.exports = {
     res.status(202).send({
       error: false,
       data,
-      new: await User.findOne(req.user._id),
+      new: await User.findOne(req.user._id).select({ password: 0 }),
     });
   },
 };
