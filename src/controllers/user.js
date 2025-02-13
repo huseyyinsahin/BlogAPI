@@ -53,7 +53,9 @@ module.exports = {
       throw new Error("User not found");
     }
 
-    const blogs = await Blog.find({ userId: req.params.id }).limit(4);
+    const blogs = await Blog.find({ userId: req.params.id })
+      .sort({ createdAt: -1 })
+      .limit(4);
 
     res.status(200).send({
       error: false,
