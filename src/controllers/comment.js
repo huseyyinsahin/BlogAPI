@@ -4,28 +4,28 @@ const Comment = require("../models/comment");
 const Blog = require("../models/blog");
 
 module.exports = {
-  list: async (req, res) => {
-    /*
-            #swagger.tags = ["Comments"]
-            #swagger.summary = "List Comments"
-            #swagger.description = `
-                You can use <u>filter[] & search[] & sort[] & page & limit</u> queries with endpoint.
-                <ul> Examples:
-                    <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>
-                    <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>
-                    <li>URL/?<b>sort[field1]=asc&sort[field2]=desc</b></li>
-                    <li>URL/?<b>limit=10&page=1</b></li>
-                </ul>
-            `
-        */
-    const data = await res.getModelList(Comment, {}, "userId");
+  // list: async (req, res) => {
+  //   /*
+  //           #swagger.tags = ["Comments"]
+  //           #swagger.summary = "List Comments"
+  //           #swagger.description = `
+  //               You can use <u>filter[] & search[] & sort[] & page & limit</u> queries with endpoint.
+  //               <ul> Examples:
+  //                   <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>
+  //                   <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>
+  //                   <li>URL/?<b>sort[field1]=asc&sort[field2]=desc</b></li>
+  //                   <li>URL/?<b>limit=10&page=1</b></li>
+  //               </ul>
+  //           `
+  //       */
+  //   const data = await res.getModelList(Comment, {}, "userId");
 
-    res.status(200).send({
-      error: false,
-      details: await res.getModelListDetails(Comment),
-      data,
-    });
-  },
+  //   res.status(200).send({
+  //     error: false,
+  //     details: await res.getModelListDetails(Comment),
+  //     data,
+  //   });
+  // },
 
   create: async (req, res) => {
     /*
@@ -62,7 +62,7 @@ module.exports = {
             #swagger.summary = "Get Single Comment"
         */
     const comment = await Comment.findOne({ _id: req.params.id }).populate([
-      { path: "userId", select: "firstName,lastName,image" },
+      { path: "userId", select: "firstName lastName image username" },
     ]);
 
     if (!comment) {
