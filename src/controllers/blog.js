@@ -91,19 +91,21 @@ module.exports = {
       { _id: req.params.id },
       { $addToSet: { visitors: ip } },
       { new: true }
-    )
-      .populate({
+    ).populate(
+      {
+        path: "userId",
+        select: "username firstName lastName image",
+      },
+      {
         path: "comments",
         select: "_id comment blogId updatedAt",
         populate: {
           path: "userId",
           select: "username firstName lastName image",
         },
-      })
-      .populate({
-        path: "userId",
-        select: "username firstName lastName image",
-      });
+      }
+    );
+
     res.status(200).send({
       error: false,
       data,
