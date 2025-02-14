@@ -137,12 +137,20 @@ module.exports = {
             #swagger.tags = ["Blogs"]
             #swagger.summary = "Delete Blog"
         */
-    const data = await Blog.deleteOne({ _id: req.params.id });
-
-    res.status(data.deletedCount ? 204 : 404).send({
-      error: !data.deletedCount,
-      data,
+    const userBlog = await Blog.findOne({
+      userId: req.user._id,
+      _id: req.params.id,
     });
+
+    if (userBlog) {
+      const data = await Blog.deleteOne({ _id: req.params.id });
+      res.status(data.deletedCount ? 204 : 404).send({
+        error: !data.deletedCount,
+        data,
+      });
+    } else {
+      res.status(403).send({ error: true, message: "You have no authority" });
+    }
   },
 
   postLike: async (req, res, next) => {
