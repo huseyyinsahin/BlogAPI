@@ -22,17 +22,21 @@ module.exports = {
         */
 
     if (req.query.author) {
-      const data = await Blog.find({ userId: req.query.author }).populate([
-        { path: "userId", select: "firstName lastName image" },
-      ]);
+      if (req.user._id.toString() === req.query.author) {
+        const data = await Blog.find({ userId: req.query.author }).populate([
+          { path: "userId", select: "firstName lastName image" },
+        ]);
 
-      res.status(200).send({
-        error: false,
-        details: await res.getModelListDetails(Blog, {
-          userId: req.query.author,
-        }),
-        data,
-      });
+        res.status(200).send({
+          error: false,
+          details: await res.getModelListDetails(Blog, {
+            userId: req.query.author,
+          }),
+          data,
+        });
+      } else {
+        res.status(403).send({ error: true, message: "You have no authority" });
+      }
     } else {
       const data = await res.getModelList(Blog, { isPublish: true }, [
         "categoryId",
